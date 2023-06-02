@@ -15,7 +15,7 @@ function AppAlert(): JSX.Element {
   useEffect(() => {
     dispatchAlertEventFn = dispatchAlertEventInnerFn;
   }, []);
-
+  
   const dispatchAlertEventInnerFn = (alertProps: ALERT_PROPS_TYPE) => {
     dispatch(
       setAlert({

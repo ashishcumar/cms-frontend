@@ -102,24 +102,21 @@ class NW {
       if (other?.token) {
         headers.Authorization = other.token;
       }
-      if (other?.authorizationToken) {
-        headers.authorizationToken = other.authorizationToken;
-      } else if (!other?.authorizationToken) headers.authorizationToken = token;
-      // if (other?.hideLoader) {
-      //   showLoading(other?.hideLoader);
-      // } else {
-      //   showLoading();
-      // }
+      if (other?.hideLoader) {
+        showLoading(other?.hideLoader);
+      } else {
+        showLoading();
+      }
       const response = await axios({
         url: baseUrl + EndPoint,
         headers,
         method: "POST",
         data: data,
       });
-      // hideLoading();
+      hideLoading();
       return response.data;
     } catch (error: any) {
-      // hideLoading();
+      hideLoading();
       if (other?.showError) {
         this.handleErrors(error);
         return error;
@@ -141,7 +138,7 @@ class NW {
     url: string,
     file: File
   ): Promise<AxiosResponse<any, any> | null> {
-    // showLoading();
+    showLoading();
     const body = new FormData();
     body.append("file", file);
     try {
@@ -156,11 +153,11 @@ class NW {
         method: "PUT",
         data: body,
       });
-      // hideLoading();
+      hideLoading();
       return response;
     } catch (error: any) {
       this.handleErrors(error);
-      // hideLoading();
+      hideLoading();
       return error;
     }
   }

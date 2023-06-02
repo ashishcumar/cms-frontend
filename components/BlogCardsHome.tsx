@@ -121,11 +121,7 @@ function BlogCardsHome() {
                 </Box>
               </Box>
             </Box>
-            {
-              i % 6 == 0 || i % 6 == 5  ? (
-                <hr style={{width:'100%',margin:'20px auto',border:'1px solid #2b2f36' }}/>
-              ) : null
-            }
+                <hr style={{width:'100%',margin:'24px auto',border:'1px solid #2b2f36' }}/>
             </Grid>
           );
         })}

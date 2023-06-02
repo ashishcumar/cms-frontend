@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import {
-    Modal_Background,
+  Modal_Background,
   Primary_Background,
   boxShad,
   boxShad2,
@@ -33,9 +33,11 @@ function Index() {
             width: "100vw",
             display: "grid",
             placeContent: "center",
+            background: "#111111BF",
+            zIndex: 4,
           }}
         >
-          <SendEmailPopUp />
+          <SendEmailPopUp setShowInviteModal={setShowInviteModal} />
         </Grid>
       ) : null}
 
@@ -63,8 +65,12 @@ function Index() {
               Staff
             </Box>
             <Box>
-              <Button fullWidth variant="contained" onClick={() => setShowInviteModal(true)}>
-                Invite People
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => setShowInviteModal(true)}
+              >
+                Add Admin
               </Button>
             </Box>
           </Grid>

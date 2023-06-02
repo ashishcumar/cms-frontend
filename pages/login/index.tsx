@@ -7,28 +7,37 @@ import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
 import { ConstructionOutlined } from "@mui/icons-material";
 import { EMAIL_REG } from "@/helper/constants";
 import { alertShow } from "@/components/globalComponents/AppAlert";
+import Utils from "@/helper/Utils";
+import { Router } from "express";
+import { useRouter } from "next/router";
 
 function Index() {
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  useEffect(() => {
-    getAdmin();
-  }, []);
-
   const getAdmin = async () => {
-    if(!EMAIL_REG.test(email)){
+    if (!EMAIL_REG.test(email)) {
       alertShow({
-        message:'Enter Valid Email Id',
-        type:'error'
-      })
+        message: "Enter Valid Email Id",
+        type: "error",
+      });
       return;
     }
-    let body = { email, password }
+    let body = { email, password };
     const res = await NW.Post(BaseUrl, EndPoint.ADMIN_LOGIN, { body });
     if (res) {
-      console.log(res);
+       Utils.setCookies('userToken',res.accessToken,7)
+       router.push('/')
     }
+  };
+
+  const isBtnDisabled = () => {
+    let status = true;
+    if (email.length > 6 && password.length > 6) {
+      status = false;
+    }
+    return status;
   };
 
   return (
@@ -99,7 +108,6 @@ function Index() {
             }}
           />
         </Box>
-
         <Button
           variant="contained"
           fullWidth
@@ -107,6 +115,8 @@ function Index() {
             margin: "8px 0",
             background: "linear-gradient(#5bbbf0,#2ba2e3)",
           }}
+          disabled={isBtnDisabled()}
+          onClick={getAdmin}
         >
           Submit
         </Button>

@@ -17,12 +17,24 @@ import {
 } from "@/helper/theme";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import Head from "next/head";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Down_Arrow from "@/assets/images/Down_Arrow.png";
 import Image from "next/image";
+import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
 
 function Index() {
   const [blogDetails, setBlogDetails] = useState<BLOGS[]>();
+
+  useEffect(() => {
+    getAllBlogs();
+  }, []);
+
+  const getAllBlogs = async () => {
+    const res = await NW.Get(BaseUrl, EndPoint.GET_All_BLOGS);
+    if (res) {
+      console.log(res);
+    }
+  };
 
   const filterOptions = [
     {
@@ -138,7 +150,14 @@ function Index() {
               background: neutral50,
             }}
           >
-            <Box sx={{ display: "grid", gridTemplateColumns: "7fr 1fr 2fr",padding:'12px 16px',    borderBottom: `1px solid ${neutral100}`,}}>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "7fr 1fr 2fr",
+                padding: "12px 16px",
+                borderBottom: `1px solid ${neutral100}`,
+              }}
+            >
               {["TITLE", "STATUS", "LAST UPDATE"].map((text, i) => {
                 return (
                   <Box
@@ -146,7 +165,6 @@ function Index() {
                     sx={{
                       typography: "font_14_500",
                       textAlign: i > 0 ? "center" : "left",
-         
                     }}
                   >
                     {text}
@@ -161,7 +179,7 @@ function Index() {
                     display: "grid",
                     gridTemplateColumns: "7fr 1fr 2fr",
                     borderBottom: `1px solid ${neutral100}`,
-                    padding:'12px',
+                    padding: "12px",
                     background: "white",
                     "&:hover": {
                       background: neutral25,

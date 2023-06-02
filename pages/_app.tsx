@@ -1,12 +1,37 @@
-import { CMS_THEME } from '@/helper/theme'
-import '@/styles/globals.css'
-import { ThemeProvider } from '@emotion/react'
-import type { AppProps } from 'next/app'
+import AppAlert from "@/components/globalComponents/AppAlert";
+import AppLoader from "@/components/globalComponents/AppLoader";
+import { CMS_THEME } from "@/helper/theme";
+import { store } from "@/redux/store";
+import "@/styles/globals.css";
+import { ThemeProvider } from "@emotion/react";
+import type { AppProps } from "next/app";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import { Provider } from "react-redux";
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: any) {
+  const [isDomLoaded, setIsDomLoaded] = useState<boolean>(false);
+
+  useEffect(() => {
+    if(typeof globalThis.window !== 'undefined' )
+    setIsDomLoaded(true);
+  }, [globalThis, globalThis.window]);
+   
   return (
-  <ThemeProvider theme={CMS_THEME}>
-    <Component {...pageProps} />
-  </ThemeProvider>
-  )
+    <>
+      {isDomLoaded ? (
+        <ThemeProvider theme={CMS_THEME}>
+          <Provider store={store}>
+            <AppAlert />
+            <AppLoader />
+            <Component {...pageProps} />
+          </Provider>
+        </ThemeProvider>
+      ) : null}
+    </>
+  );
 }
+
+export default dynamic(() => Promise.resolve(App), {
+  ssr: false,
+});
