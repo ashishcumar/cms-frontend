@@ -3,9 +3,7 @@ import ghostIcon from "@/assets/images/ghost_icon.png";
 import { Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import {
-  font_12_400_Modal,
   neutral100,
-  neutral200,
   neutral900,
 } from "@/helper/theme";
 import { neutral700 } from "@/helper/theme";

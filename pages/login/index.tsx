@@ -1,5 +1,5 @@
 import { Box, Button, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import passwordIconLogin from "@/assets/images/passwordIconLogin.png";
 import emailIconLogin from "@/assets/images/emailIconLogin.png";
 import Image from "next/image";

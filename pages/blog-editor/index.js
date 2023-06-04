@@ -1,8 +1,7 @@
-import { neutral100, neutral500, neutral700, neutral900 } from "@/helper/theme";
+import { neutral100,neutral700} from "@/helper/theme";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
-import { use, useEffect, useState } from "react";
-import postIcon from "@/assets/images/postIcon.png";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
 import ghostLogo from "@/assets/images/ghost-logo.svg";
@@ -19,7 +18,7 @@ export default function Index() {
   const [html, setHtml] = useState("");
   const [tag, setTag] = useState("");
   const [author, setAuthor] = useState("");
-  const [slug, setSlug] = useState("");
+
   const [publishDate, setPublishDate] = useState("");
   const [featuredImg, setFeaturedImg] = useState("");
   const [short_Desp, setShort_Desp] = useState("");
@@ -64,6 +63,7 @@ export default function Index() {
   };
   
 useEffect(() => {
+initTerminal()
   if(!Utils.getCookie('userToken')){
     router.push('/login')
   }
@@ -90,7 +90,7 @@ useEffect(() => {
         >
           <Image src={ghostLogo.src} alt="ghostlogo" height={48} width={240} />
           <Typography
-            sx={{
+            sx={{ 
               color: "white",
               typography: "font_20_600",
               textAlign: "center",

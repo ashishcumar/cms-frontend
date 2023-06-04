@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
-import JoditEditor from "jodit-react";
-
-const config = {
-  buttons: ["bold", "italic", "link", "unlink", "underline", "source"],
-};
+// import JoditEditor from "jodit-react";
 
 const RichTextEditor = ({ initialValue, getValue }) => {
   const editor = useRef(null);
   const [isDomLoaded, setIsDomLoaded] = useState(false);
   useEffect(() => {
-    if(typeof window !== 'undefined'){
+    let JoditEditor;
+    const initTerminal = async () => {
+      JoditEditor = await import("jodit-react");
+    };
+    initTerminal();
+    if (typeof window !== "undefined") {
       setIsDomLoaded(true);
     }
   }, []);

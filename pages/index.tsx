@@ -1,11 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import Layout from "@/components/Layout";
 import { Box, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import ghostLogo from "@/assets/images/ghost-logo.svg";
 import BlogCardsHome from "@/components/BlogCardsHome";

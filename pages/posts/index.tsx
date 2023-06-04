@@ -1,4 +1,4 @@
-import { BLOGS, BLOG_OBJECT } from "@/Interface/interface";
+import { BLOG_OBJECT } from "@/Interface/interface";
 import Layout from "@/components/Layout";
 import {
   Draft_Bg,
@@ -10,8 +10,6 @@ import {
   neutral25,
   neutral400,
   neutral50,
-  neutral500,
-  neutral600,
   neutral700,
   neutral900,
 } from "@/helper/theme";

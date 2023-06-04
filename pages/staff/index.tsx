@@ -1,16 +1,10 @@
 import Layout from "@/components/Layout";
 import {
-  Modal_Background,
   Primary_Background,
   boxShad,
-  boxShad2,
-  neutral100,
-  neutral200,
-  neutral25,
   neutral400,
   neutral50,
   neutral500,
-  neutral700,
   neutral900,
 } from "@/helper/theme";
 import { Box, Button, Grid, Typography } from "@mui/material";

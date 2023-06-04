@@ -4,7 +4,6 @@ import { CMS_THEME } from "@/helper/theme";
 import { store } from "@/redux/store";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@emotion/react";
-import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { Provider } from "react-redux";
