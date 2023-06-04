@@ -9,15 +9,30 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import ghostLogo from "@/assets/images/ghost-logo.svg";
 import BlogCardsHome from "@/components/BlogCardsHome";
+import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
+import { BLOG_OBJECT } from "@/Interface/interface";
+import Utils from "@/helper/Utils";
 
 export default function Home() {
   const router = useRouter();
   const [isDomLoaded, setIsDomLoaded] = useState<boolean>(false);
+  const [blogsArr, setBlogArr] = useState<BLOG_OBJECT[]>();
 
   useEffect(() => {
-    if(typeof globalThis.window !== 'undefined' )
-    setIsDomLoaded(true);
+    if(!Utils.getCookie('userToken')){
+      router.push('/login')
+    }
+    if (typeof globalThis.window !== "undefined") setIsDomLoaded(true);
+    getAllPosts();
   }, [globalThis, globalThis.window]);
+
+  const getAllPosts = async () => {
+    const allBlogs = await NW.Get(BaseUrl, EndPoint.GET_All_BLOGS);
+    if (allBlogs) {
+      setBlogArr(allBlogs);
+    }
+  };
+
   return (
     <>
       {isDomLoaded ? (
@@ -82,10 +97,11 @@ export default function Home() {
                   Thoughts, stories and ideas.
                 </Typography>
               </Box>
-
-              <Box sx={{ margin: "48px 0 0 0" }}>
-                <BlogCardsHome />
-              </Box>
+              {blogsArr && blogsArr.length ? (
+                <Box sx={{ margin: "48px 0 0 0" }}>
+                  <BlogCardsHome blogs={blogsArr} />
+                </Box>
+              ) : null}
             </Grid>
           </Layout>
         </>

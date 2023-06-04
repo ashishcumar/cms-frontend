@@ -1,4 +1,4 @@
-import { BLOGS } from "@/Interface/interface";
+import { BLOGS, BLOG_OBJECT } from "@/Interface/interface";
 import Layout from "@/components/Layout";
 import {
   Draft_Bg,
@@ -21,43 +21,62 @@ import React, { useEffect, useState } from "react";
 import Down_Arrow from "@/assets/images/Down_Arrow.png";
 import Image from "next/image";
 import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
+import { useRouter } from "next/router";
+import Utils from "@/helper/Utils";
 
 function Index() {
-  const [blogDetails, setBlogDetails] = useState<BLOGS[]>();
+  const router = useRouter();
+  const [blogArr, setBlogArr] = useState<BLOG_OBJECT[]>();
+  const [showFilter, setShowFilter] = useState<boolean>(false);
 
   useEffect(() => {
-    getAllBlogs();
+    if(!Utils.getCookie('userToken')){
+      router.push('/login')
+    }
+    getAllPosts();
   }, []);
 
-  const getAllBlogs = async () => {
-    const res = await NW.Get(BaseUrl, EndPoint.GET_All_BLOGS);
-    if (res) {
-      console.log(res);
-    }
-  };
-
   const filterOptions = [
-    {
-      filterName: "All posts",
-      onClickFunction: () => {},
-      borderRadius: "8px 0 0 8px",
-    },
-    {
-      filterName: "All authors",
-      onClickFunction: () => {},
-      borderRadius: "",
-    },
-    {
-      filterName: "All tags",
-      onClickFunction: () => {},
-      borderRadius: "",
-    },
+    // {
+    //   filterName: "All posts",
+    //   onClickFunction: () => {},
+    //   borderRadius: "8px 0 0 8px",
+    // },
+    // {
+    //   filterName: "All authors",
+    //   onClickFunction: () => {},
+    //   borderRadius: "",
+    // },
+    // {
+    //   filterName: "All tags",
+    //   onClickFunction: () => {},
+    //   borderRadius: "",
+    // },
     {
       filterName: "Sort by",
-      onClickFunction: () => {},
+      onClickFunction: () => setShowFilter(true),
       borderRadius: "0px 8px 8px 0px",
     },
   ];
+  const getAllPosts = async () => {
+    const allBlogs = await NW.Get(BaseUrl, EndPoint.GET_All_BLOGS);
+    if (allBlogs) {
+      setBlogArr(allBlogs);
+      console.log(allBlogs);
+    }
+  };
+
+  const getSortBlogs = async (val: string) => {
+    let body = {
+      filterBy: "Sort by",
+      filterFor: val,
+    };
+    const sortedBlogs = await NW.Post(BaseUrl, EndPoint.FILTER_BLOG, { body });
+    if (sortedBlogs) {
+      setBlogArr(sortedBlogs);
+      console.log(sortedBlogs);
+    }
+  };
 
   return (
     <>
@@ -97,47 +116,87 @@ function Index() {
                   display: "flex",
                   justifyContent: "space-evenly",
                   alignItems: "center",
-                  border: `1px solid ${neutral100}`,
                   margin: "0 12px",
                   borderRadius: "8px",
                   overflow: "hidden",
-                  background: "white",
                 }}
               >
                 {filterOptions.map((filterObj) => {
                   return (
-                    <Typography
-                      variant="font_14_400"
-                      onClick={filterObj.onClickFunction}
-                      key={filterObj.filterName}
-                      sx={{
-                        padding: "8px 12px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        cursor: "pointer",
-                        borderRadius: filterObj.borderRadius,
-                        border: `1px solid ${neutral25}`,
-                        "&:hover": {
-                          boxShadow: boxShad,
-                        },
-                      }}
-                    >
-                      {filterObj.filterName}
-                      <Image
-                        src={Down_Arrow}
-                        alt="forwardArrow"
-                        style={{
-                          height: "10px",
-                          width: "10px",
-                          margin: "0 4px",
+                    <Grid sx={{ position: "relative" }} key={filterObj.filterName}>
+                      <Typography
+                        variant="font_14_400"
+                        onClick={filterObj.onClickFunction}
+                        
+                        sx={{
+                          padding: "8px 12px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          cursor: "pointer",
+                          borderRadius: "8px",
+                          border: `1px solid ${neutral100}`,
+                          background: "white",
+                          "&:hover": {
+                            boxShadow: boxShad,
+                          },
                         }}
-                      />
-                    </Typography>
+                      >
+                        {filterObj.filterName}
+                        <Image
+                          src={Down_Arrow}
+                          alt="forwardArrow"
+                          style={{
+                            height: "10px",
+                            width: "10px",
+                            margin: "0 4px",
+                          }}
+                        />
+                      </Typography>
+                      {showFilter ? (
+                        <Box sx={{ margin: "8px 0" }}>
+                          <Typography
+                            sx={{
+                              border: `1px solid ${neutral25}`,
+                              typography: "font_12_500",
+                              textAlign: "center",
+                              padding: "4px 8px",
+                              background: "white",
+                            }}
+                            onClick={() => {
+                              setShowFilter(false);
+                              getSortBlogs("Newest");
+                            }}
+                          >
+                            Newest
+                          </Typography>
+                          <Typography
+                            sx={{
+                              border: `1px solid ${neutral25}`,
+                              typography: "font_12_500",
+                              textAlign: "center",
+                              padding: "4px 8px",
+                              background: "white",
+                            }}
+                            onClick={() => {
+                              setShowFilter(false);
+                              getSortBlogs("Oldest");
+                            }}
+                          >
+                            Oldest
+                          </Typography>
+                        </Box>
+                      ) : null}
+                    </Grid>
                   );
                 })}
               </Box>
-              <Button variant="contained"> New Post </Button>
+              <Button
+                variant="contained"
+                onClick={() => router.push("/blog-editor")}
+              >
+                New Post
+              </Button>
             </Box>
           </Grid>
 
@@ -172,69 +231,71 @@ function Index() {
                 );
               })}
             </Box>
-            {Array.from(Array(20)).map((_, i) => {
-              return (
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "7fr 1fr 2fr",
-                    borderBottom: `1px solid ${neutral100}`,
-                    padding: "12px",
-                    background: "white",
-                    "&:hover": {
-                      background: neutral25,
-                    },
-                  }}
-                  key={i}
-                >
-                  <Box sx={{ padding: "0 12px" }}>
-                    <Typography
-                      sx={{ typography: "font_14_700", color: neutral700 }}
-                    >
-                      Top Provider Of By Now Pay Later
-                    </Typography>
-                    <Typography
-                      sx={{ typography: "font_12_600", color: neutral400 }}
-                    >
-                      By Ashish
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      padding: "0 12px",
-                      display: "grid",
-                      placeContent: "center",
-                    }}
-                  >
-                    <Typography
+            {blogArr && blogArr.length
+              ? blogArr.map((Obj: BLOG_OBJECT, i) => {
+                  return (
+                    <Box
                       sx={{
-                        color: Draft_Dark,
-                        padding: "4px 8px",
-                        background: Draft_Bg,
-                        borderRadius: "8px",
-                        width: "fit-content",
-                        typography: "font_12_400",
-                        margin: "auto",
-                        height: "fit-content",
+                        display: "grid",
+                        gridTemplateColumns: "7fr 1fr 2fr",
+                        borderBottom: `1px solid ${neutral100}`,
+                        padding: "12px",
+                        background: "white",
+                        "&:hover": {
+                          background: neutral25,
+                        },
                       }}
+                      key={i}
                     >
-                      DRAFT
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      padding: "0 12px",
-                      display: "grid",
-                      placeContent: "center",
-                    }}
-                  >
-                    <Typography sx={{ typography: "font_12_400" }}>
-                      12-03-2023
-                    </Typography>
-                  </Box>
-                </Box>
-              );
-            })}
+                      <Box sx={{ padding: "0 12px" }}>
+                        <Typography
+                          sx={{ typography: "font_14_700", color: neutral700 }}
+                        >
+                          {Obj.title.toUpperCase()}
+                        </Typography>
+                        <Typography
+                          sx={{ typography: "font_12_600", color: neutral400 }}
+                        >
+                          By {Obj.authors}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          padding: "0 12px",
+                          display: "grid",
+                          placeContent: "center",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            color: Draft_Dark,
+                            padding: "4px 8px",
+                            background: Draft_Bg,
+                            borderRadius: "8px",
+                            width: "fit-content",
+                            typography: "font_12_400",
+                            margin: "auto",
+                            height: "fit-content",
+                          }}
+                        >
+                          {Obj.blogStatus}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          padding: "0 12px",
+                          display: "grid",
+                          placeContent: "center",
+                        }}
+                      >
+                        <Typography sx={{ typography: "font_12_400" }}>
+                          {new Date(Obj.createdAt).toDateString()}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                })
+              : null}
           </Grid>
         </Grid>
       </Layout>

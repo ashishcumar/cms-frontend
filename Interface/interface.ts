@@ -34,3 +34,29 @@ export interface ALERT_PROPS_TYPE {
   type: AlertColor;
   message: string;
 }
+
+export interface BLOG_OBJECT {
+  activeFrom: string;
+  authors: string;
+  blogStatus: string;
+  createdAt: string;
+  feature_image: string;
+  html: string;
+  slug: string;
+  tags: string;
+  title: string;
+  updatedAt: string;
+  short_Desp: string;
+  __v: number;
+  _id: string;
+}
+
+export interface ADMIN_OBJECT {
+  createdAt: string;
+  email: string;
+  name: string;
+  password: string;
+  updatedAt: string;
+  __v: number;
+  _id: string;
+}

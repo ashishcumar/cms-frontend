@@ -16,6 +16,7 @@ import { neutral500 } from "@/helper/theme";
 import adminIcon from "@/assets/images/adminIcon.png";
 import homeIcon from "@/assets/images/homeIcon.png";
 import { useRouter } from "next/router";
+import plus from '@/assets/images/plus.png'
 
 function SideBar() {
   const router = useRouter();
@@ -93,6 +94,11 @@ function SideBar() {
             MANAGE
           </Typography>
           {[
+            {
+              title: "New Post",
+              icon: plus,
+              redirectFunc: () => router.push("/blog-editor"),
+            },
             {
               title: "Posts",
               icon: blogs,

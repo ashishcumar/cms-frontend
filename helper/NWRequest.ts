@@ -7,6 +7,7 @@ import {
 } from "@/components/globalComponents/AppLoader";
 import Utils from "./Utils";
 
+
 class NW {
   static getBaseUrl = () => {
     return process.env.Base_Url as string;
@@ -52,9 +53,9 @@ class NW {
       config.params = other.params;
     }
     try {
-      showLoading()
+      showLoading();
       const response = await axios.get(baseUrl + EndPoint, config);
-      hideLoading()
+      hideLoading();
       return response.data;
     } catch (error: any) {
       // this.handleErrors(error);
@@ -199,21 +200,20 @@ class NW {
   };
   static getEndPoint = () => {
     let obj = {
-
-      // BLOGS:- 
-      GET_All_BLOGS : '/api/blog',
-      GET_BLOG_BY_SLUG:'/api/blog/', //+:slug,
-      CREATE_NEW_BLOG:'/api/blog/create',
-      UPDATE_BLOG_BY_SLUG:'/api/blog/', //+:slug,
-      DELETE_BLOG_BY_SLUG:'/api/blog/', //+:slug,
+      // BLOGS:-
+      GET_All_BLOGS: "/api/blog",
+      GET_BLOG_BY_SLUG: "/api/blog/", //+:slug,
+      CREATE_NEW_BLOG: "/api/blog/create",
+      UPDATE_BLOG_BY_SLUG: "/api/blog/", //+:slug,
+      DELETE_BLOG_BY_SLUG: "/api/blog/", //+:slug,
 
       // ADMIN:-
-      GET_ALL_STAFF:'/api/admin/all-admin',
-      ADMIN_LOGIN:'/api/admin/login',
-      ADMIN_REGISTER:'/api/admin/register',
-     
+      GET_ALL_STAFF: "/api/admin/all-admin",
+      ADMIN_LOGIN: "/api/admin/login",
+      ADMIN_REGISTER: "/api/admin/register",
+
       //FILTERS:-
-      FILTER_BLOG:"/api/filter"
+      FILTER_BLOG: "/api/filter",
     };
     return obj;
   };

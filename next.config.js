@@ -3,7 +3,7 @@ require('dotenv').config()
 const webpack = require('webpack')
 
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {

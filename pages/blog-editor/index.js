@@ -1,7 +1,7 @@
 import { neutral100, neutral500, neutral700, neutral900 } from "@/helper/theme";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import postIcon from "@/assets/images/postIcon.png";
 import Image from "next/image";
 import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
@@ -22,34 +22,52 @@ export default function Index() {
   const [slug, setSlug] = useState("");
   const [publishDate, setPublishDate] = useState("");
   const [featuredImg, setFeaturedImg] = useState("");
-
+  const [short_Desp, setShort_Desp] = useState("");
 
   const createBlog = async () => {
-    if (!title || !html || !featuredImg || !author || !tag ||!publishDate) {
+    if (
+      !title ||
+      !html ||
+      !featuredImg ||
+      !author ||
+      !tag ||
+      !publishDate ||
+      !short_Desp
+    ) {
       alertShow({
         message: "All feilds are mandatory !",
         type: "error",
       });
       return;
     }
-    const body = { 
+    const body = {
       title,
-       html,
+      html,
       feature_image: featuredImg,
       authors: author,
       tags: tag,
       activeFrom: new Date(publishDate).toISOString(),
       blogStatus: "publish",
-      slug:title.replaceAll(' ','-')
+      slug: title.replaceAll(" ", "-"),
+      short_Desp,
     };
     const blog = await NW.Post(BaseUrl, EndPoint.CREATE_NEW_BLOG, {
       body,
       token: `Bearer ${Utils.getCookie("userToken")}`,
     });
-    if(blog){
-      console.log(blog)
+    if (blog) {
+      alertShow({
+        message: `Blog:"${title}" is added`,
+        type: "success",
+      });
     }
   };
+  
+useEffect(() => {
+  if(!Utils.getCookie('userToken')){
+    router.push('/login')
+  }
+},[])
 
   return (
     <Grid sx={{ padding: "24px" }}>
@@ -87,12 +105,12 @@ export default function Index() {
           border: `1px solid ${neutral100}`,
           padding: "16px",
           borderRadius: "8px",
+          marginBottom: "12px",
         }}
       >
         <Box>
           <Typography sx={{ typography: "font_20_600" }}>
-            {" "}
-            Begin writing your blog....{" "}
+            Begin writing your blog....
           </Typography>
         </Box>
         <Grid
@@ -139,6 +157,7 @@ export default function Index() {
                     color: neutral700,
                     margin: "4px 8px",
                   }}
+
                 >
                   {obj.title}
                 </Typography>
@@ -161,6 +180,26 @@ export default function Index() {
             );
           })}
         </Grid>
+        <Box sx={{ margin: "auto" }}>
+          <Typography
+            sx={{ typography: "font_16_600", margin: "8px 0",
+             }}
+          >
+            {" "}
+            Short Description :-{" "}
+          </Typography>
+          <textarea
+            style={{
+              width: "-webkit-fill-available",
+              minHeight: "200px",
+              padding: "16px",
+              borderRadius: "8px",
+              border: "1px solid #d6e3eb",
+            }}
+            placeholder="give a short description about the blog..."
+            onChange={(e) => setShort_Desp(e.target.value)}
+          ></textarea>
+        </Box>
       </Grid>
       <RichTextEditor
         getValue={(value) => setHtml(value)}
@@ -171,22 +210,23 @@ export default function Index() {
         fullWidth
         sx={{
           display: "flex",
-          justifyContent:'center',
-          alignItems:'center',
+          justifyContent: "center",
+          alignItems: "center",
           typography: "font_14_600",
           padding: "12px 0",
           margin: "24px 0",
+          background: "linear-gradient(326deg, rgba(25,27,31,1) 47%, rgba(9,10,10,1) 49%)"
         }}
         onClick={createBlog}
       >
-        <Typography sx={{display:'inline-block'}}>Post Blog</Typography> 
-        <Image
+        <Typography sx={{  }}>Post Blog</Typography>
+        {/* <Image
           src={postIcon}
           alt="postIcon"
           height={16}
           width={16}
           style={{border:'1px solid black',margin:'0 4px',display:'inline-block' }}
-        />
+        /> */}
       </Button>
     </Grid>
   );

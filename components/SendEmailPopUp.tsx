@@ -12,7 +12,11 @@ import { alertShow } from "./globalComponents/AppAlert";
 import adminIcon from "@/assets/images/adminIcon.png";
 import Utils from "@/helper/Utils";
 
-function SendEmailPopUp({setShowInviteModal}:{setShowInviteModal: (a: boolean) => void}) {
+function SendEmailPopUp({
+  setShowInviteModal,
+}: {
+  setShowInviteModal: (a: boolean) => void;
+}) {
   const router = useRouter();
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -20,22 +24,32 @@ function SendEmailPopUp({setShowInviteModal}:{setShowInviteModal: (a: boolean) =
 
   const addAdmin = async () => {
     if (!EMAIL_REG.test(email)) {
-      alertShow({
+      return alertShow({
         message: ErrorText.email,
         type: "error",
       });
     }
+    if (!name || !password) {
+      return alertShow({
+        message: "all fields are mandatory !",
+        type: "error",
+      });
+    }
     const body = {
-      name: "Admin",
-      email: "Admin@gmail.com",
-      password: "Admin123",
+      name,
+      email,
+      password,
     };
     const res = await NW.Post(BaseUrl, EndPoint.ADMIN_REGISTER, {
       body,
       token: `Bearer ${Utils.getCookie("userToken")}`,
     });
     if (res) {
-      console.log(res);
+      alertShow({
+        message: `${name.toUpperCase()} is added as Admin.`,
+        type: "success",
+      });
+      setShowInviteModal(false)
     }
   };
 

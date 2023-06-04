@@ -14,14 +14,34 @@ import {
   neutral900,
 } from "@/helper/theme";
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import emailIcon from "@/assets/images/emailIcon.png";
 import Image from "next/image";
 import adminIcon from "@/assets/images/adminIcon.png";
 import SendEmailPopUp from "@/components/SendEmailPopUp";
+import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
+import { ADMIN_OBJECT } from "@/Interface/interface";
+import Utils from "@/helper/Utils";
+import { useRouter } from "next/router";
 
 function Index() {
-  const [showInviteModal, setShowInviteModal] = useState<boolean>(true);
+  const router = useRouter();
+  const [showInviteModal, setShowInviteModal] = useState<boolean>(false);
+  const [allAdminList,setAllAdminList] = useState<ADMIN_OBJECT[]>()
+
+ useEffect(() => {
+  if(!Utils.getCookie('userToken')){
+    router.push('/login')
+  }
+  getAllAdmin()
+ },[])
+
+  const getAllAdmin = async() => {
+  const allAdmin = await NW.Post(BaseUrl,EndPoint.GET_ALL_STAFF)
+  if(allAdmin){
+    setAllAdminList(allAdmin)
+  }
+  }
 
   return (
     <>
@@ -193,14 +213,7 @@ function Index() {
                 overflow: "hidden",
               }}
             >
-              {[
-                {
-                  name: "Ashish",
-                },
-                {
-                  name: "Kumar",
-                },
-              ].map((obj, i, currArr) => {
+              { allAdminList && allAdminList.length ? allAdminList.map((obj:ADMIN_OBJECT, i, currArr) => {
                 return (
                   <Box
                     key={obj.name}
@@ -263,7 +276,7 @@ function Index() {
                     </Box>
                   </Box>
                 );
-              })}
+              }) : null}
             </Box>
           </Grid>
         </Grid>
