@@ -4,11 +4,9 @@ import passwordIconLogin from "@/assets/images/passwordIconLogin.png";
 import emailIconLogin from "@/assets/images/emailIconLogin.png";
 import Image from "next/image";
 import NW, { BaseUrl, EndPoint } from "@/helper/NWRequest";
-import { ConstructionOutlined } from "@mui/icons-material";
 import { EMAIL_REG } from "@/helper/constants";
 import { alertShow } from "@/components/globalComponents/AppAlert";
 import Utils from "@/helper/Utils";
-import { Router } from "express";
 import { useRouter } from "next/router";
 
 function Index() {
